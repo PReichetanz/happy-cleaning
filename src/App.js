@@ -1,26 +1,20 @@
 import Header from './Header';
-import { useEffect, useState } from 'react';
+import useLocalStorage from './hooks/useLocalStorage';
 import produce from 'immer';
 import './App.css';
 
 export default function App() {
-  const [rooms, setRooms] = useState(
-    loadFromLocal('rooms') ?? [
-      {
-        title: 'Küche',
-      },
-      {
-        title: 'Wohnzimmer',
-      },
-      {
-        title: 'Bad',
-      },
-    ]
-  );
-
-  useEffect(() => {
-    saveToLocal('rooms', rooms);
-  }, [rooms]);
+  const [rooms, setRooms] = useLocalStorage('rooms', [
+    {
+      title: 'Küche',
+    },
+    {
+      title: 'Wohnzimmer',
+    },
+    {
+      title: 'Bad',
+    },
+  ]);
 
   return (
     <main className="App">
@@ -32,18 +26,6 @@ export default function App() {
       ))}
     </main>
   );
-
-  function loadFromLocal(key) {
-    try {
-      return JSON.parse(localStorage.getItem(key));
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  function saveToLocal(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-  }
 
   function toggleCleaningStatus(index) {
     // with immerjs:
